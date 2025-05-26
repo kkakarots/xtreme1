@@ -21,11 +21,12 @@
       <ToolIcon :tool="state.toolType" />&nbsp;{{ editor.showNameOrAlias(item) }}
     </span>
     <div ref="classAttrsCard" class="class-attrs-card">
-      <div v-if="state.classType && state.attrs.length > 0" class="attr-container">
+      <!-- <div v-if="state.classType && state.attrs.length > 0" class="attr-container">
         <div class="attr-item" v-for="item in state.attrs" :key="state.classType + item.name">
           <AttrValue @change="onAttChange" :item="item" :isDisable="!canEdit()" />
         </div>
-      </div>
+      </div> -->
+      <ClassAttrsCollapse :attrs="state.attrs" @change="onAttChange" />
     </div>
     <div class="warn-msg" :style="{ top: `${thisSta.msgTop}px` }">
       <Msgwarn
@@ -53,6 +54,7 @@
   import useUI from '../../../hook/useUI';
   import AttrValue from './AttrValue.vue';
   import Msgwarn from './Msgwarn.vue';
+  import ClassAttrsCollapse from './ClassAttrsCollapse.vue';
 
   const emit = defineEmits(['onChangeClass', 'onChangeAttrs']);
 
@@ -75,6 +77,8 @@
     if (el) refItemMap[el.id] = el;
   };
   const classList = computed(() => {
+    console.log('⭐attrs', JSON.stringify(state.attrs));
+    console.log('⭐attrs', state.attrs);
     return state.classList.filter((classType) => {
       const name = classType.name + (classType.label || '');
       return name.indexOf(thisSta.searchVal) > -1 || !thisSta.searchVal;
@@ -113,6 +117,7 @@
     changeClass.value = undefined;
   }
   function onAttChange(name: string, value: any) {
+    console.log('⭐onAttrChange', name, value);
     emit('onChangeAttrs', name, value);
   }
 </script>
